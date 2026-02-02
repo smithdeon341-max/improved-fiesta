@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buddie AI - Pricing Plans</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f0a2e 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
+
+        .nav-tabs {
+            background: linear-gradient(90deg, rgba(10, 14, 39, 0.8), rgba(26, 31, 58, 0.8));
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            display: flex;
+            gap: 0;
+            padding: 0;
+            overflow-x: auto;
+            position: sticky;
+            top: 0;
+            z-index: 200;
+        }
+
+        .nav-tabs a {
+            padding: 16px 24px;
+            text-decoration: none;
+            color: #a0aec0;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        .nav-tabs a:hover {
+            color: #00d4ff;
+            border-bottom-color: rgba(0, 212, 255, 0.3);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .nav-tabs a.active {
+            color: #00d4ff;
+            border-bottom-color: #00d4ff;
+            background: rgba(0, 212, 255, 0.15);
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px 20px;
+        }
+
+        /* Animated background */
+        .bg-orbs {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .orb-1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #00d4ff, #0066ff);
+            top: 10%;
+            left: 10%;
+            animation-duration: 25s;
+        }
+
+        .orb-2 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #7c3aed, #00d4ff);
+            bottom: 20%;
+            right: 10%;
+            animation-duration: 30s;
+            animation-delay: -5s;
+        }
+
+        .orb-3 {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, #ff006e, #7c3aed);
+            top: 50%;
+            right: 20%;
+            animation-duration: 35s;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(30px, -30px); }
+            66% { transform: translate(-20px, 20px); }
+        }
+
+        /* Header */
+        .header {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 60px 20px 40px;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #00d4ff, #7c3aed, #ff006e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #a0aec0;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .pricing-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .toggle-label {
+            color: #a0aec0;
+            font-size: 0.95rem;
+        }
+
+        .toggle-switch {
+            width: 60px;
+            height: 32px;
+            background: rgba(100, 116, 139, 0.3);
+            border-radius: 16px;
+            cursor: pointer;
+            position: relative;
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: linear-gradient(135deg, #00d4ff, #7c3aed);
+            border-color: transparent;
+        }
+
+        .toggle-slider {
+            width: 28px;
+            height: 28px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            left: 30px;
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Pricing Grid */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .pricing-card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            border-radius: 16px;
+            padding: 40px 30px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pricing-card:hover {
+            border-color: #00d4ff;
+            box-shadow: 0 8px 32px rgba(0, 212, 255, 0.15);
+            transform: translateY(-10px);
+        }
+
+        .pricing-card.featured {
+            border: 2px solid #00d4ff;
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-10px);
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #00d4ff, #7c3aed);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tier-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .tier-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #e2e8f0;
+        }
+
+        .tier-description {
+            color: #a0aec0;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+            min-height: 50px;
+        }
+
+        .price-section {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .price {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d4ff, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 5px;
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: #a0aec0;
+        }
+
+        .billing-period {
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        .features-list {
+            flex: 1;
+            margin-bottom: 30px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 15px;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+        }
+
+        .feature-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d4ff, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .feature-icon::before {
+            content: '✓';
+            color: white;
+            font-weight: bold;
+            font-size: 0.75rem;
+        }
+
+        .feature-item.disabled {
+            color: #64748b;
+            opacity: 0.6;
+        }
+
+        .feature-item.disabled .feature-icon {
+            background: rgba(100, 116, 139, 0.2);
+        }
+
+        .feature-item.disabled .feature-icon::before {
+            content: '✗';
+        }
+
+        .cta-button {
+            width: 100%;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button.primary {
+            background: linear-gradient(135deg, #00d4ff, #7c3aed);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .cta-button.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 212, 255, 0.4);
+        }
+
+        .cta-button.secondary {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            color: #cbd5e1;
+        }
+
+        .cta-button.secondary:hover {
+            border-color: #00d4ff;
+            color: #00d4ff;
+        }
+
+        .cta-button:active {
+            transform: translateY(0);
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            margin: 80px 0;
+            padding: 60px 0;
+            border-top: 1px solid rgba(100, 116, 139, 0.2);
+            border-bottom: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .faq-title {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 50px;
+            background: linear-gradient(135deg, #00d4ff, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .faq-item {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: #00d4ff;
+            background: rgba(30, 41, 59, 0.95);
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        .faq-toggle {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #00d4ff, #7c3aed);
+            border-radius: 4px;
+            color: white;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item.open .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            display: none;
+            margin-top: 15px;
+            color: #a0aec0;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .faq-item.open .faq-answer {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #64748b;
+            border-top: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .footer p {
+            margin-bottom: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+
+            .pricing-grid {
+                gap: 20px;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+
+            .pricing-card.featured:hover {
+                transform: translateY(-10px);
+            }
+
+            .price {
+                font-size: 2rem;
+            }
+
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(100, 116, 139, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 116, 139, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-tabs">
+        <a href="index.html">🏠 Home</a>
+        <a href="Index.html">🔐 Auth</a>
+        <a href="dashboard.html">🚀 Dashboard</a>
+        <a href="subscription_page.html" class="active">💳 Pricing</a>
+        <a href="admin-panel.html">⚙️ Admin</a>
+        <a href="admin-dashboard.html">💰 Payments</a>
+        <a href="stripe-integration.html">🔗 Stripe Setup</a>
+    </div>
+    <div class="main-content">
+    <div class="bg-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="header">
+        <h1>Simple, Transparent Pricing</h1>
+        <p>Choose the perfect plan to unlock the power of AI. Scale as you grow.</p>
+    </div>
+
+    <div class="container">
+        <div class="pricing-grid">
+            <!-- Tier 1: Basic -->
+            <div class="pricing-card">
+                <div class="tier-icon">🎯</div>
+                <div class="tier-name">Starter</div>
+                <div class="tier-description">Perfect for getting started with AI</div>
+
+                <div class="price-section">
+                    <div class="price">Free<span></span></div>
+                    <div class="billing-period">Forever free</div>
+                </div>
+
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="feature-icon"></div>
+                        <span>Text-based Q&A</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"></div>
+                        <span>Basic Chat Models</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"></div>
+                        <span>Up to 100 requests/month</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"></div>
+                        <span>Standard Support</span>
+                    </div>
+                    <div class="feature-item disabled">
+                        <div class="feature-icon"></div>
+                        <span>Image Generation</span>
+                    </div>
+                    <div class="feature-item disabled">
+                        <div class="feature-icon"></div>
+                        <span>Voice & Audio</span>
+                    </div>
+                    <div class="feature-item disabled">
+                        <div class="feature-icon"></div>
+                        <span>Video Generation</span>
+                    </div>
+                    <div class="feature-item disabled">
+                        <div class="feature-icon"></div>
+                        <span>Coding Models</span>
+                    </div>
+                </div>
+
+                <button class="cta-button secondary">Get Started</button>
+            </div>
+
+            <!-- Tier 2: Pro -->
+            <div class="pricing-card featured">
+                <div class="featured-badge">Most Popular</div>
+                <div class="tier-icon">⚡</div>
+                <div class="tier-name">Professional</div>
+                <div class="tier-description">Best for creators and developers</div>
+
+                <div class="price-section">
+                    <div class="price">$9.99<span>/month</span></div>
+                    <div class="billing-period">Billed monthly</div>
+                </div>
+
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="feature-icon"></div>
+                        <span>Everything in Starter</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"></div>
+                        <span>🎨 Image Generation</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"></div>
+                        <span>🎙️ Voice & Audio</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"></div>
+                        <span>Up to 5,000 requests/month</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"></div>
+                        <span>All Chat Models</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"></div>
+                        <span>Coding Assistance</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"></div>
+                        <span>Priority Support</span>
+                    </div>
+                    <div class="feature-item disabled">
+                        <div class="feature-icon"></div>
+                        <span>Video Generation</span>
+                    </div>
+                </div>
+
+                <button class="cta-button primary">Start Free Trial</button>
+            </div>
+
+            <!-- Tier 3: Enterprise -->
+            <div class="pricing-card">
+                <div class="tier-icon">🚀</div>
+                <div class="tier-name">Premium</div>
+                <div class="tier-description">Unlock everything AI has to offer</div>
+
+                <div class="price-section">
+                    <div class="price">$14.99<span>/month</span></div>
+                    <div class="billing-period">Billed monthly</div>
+                </div>
+
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="feature-icon"></div>
+                        <span>Everything in Professional</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"></div>
+                        <span>🎬 Video Generation</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"></div>
+                        <span>💻 App Making Models</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"></div>
+                        <span>Unlimited requests/month</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"></div>
+                        <span>Advanced Video Models</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"></div>
+                        <span>All Image Models</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"></div>
+                        <span>Custom Model Training</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"></div>
+                        <span>24/7 Premium Support</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"></div>
+                        <span>API Access</span>
+                    </div>
+                </div>
+
+                <button class="cta-button primary">Start Free Trial</button>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="faq-section">
+            <h2 class="faq-title">Frequently Asked Questions</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can I cancel anytime?</span>
+                        <div class="faq-toggle">+</div>
+                    </div>
+                    <div class="faq-answer">
+                        Yes! You can cancel your subscription at any time. No questions asked, no hidden fees. Your access will continue until the end of your billing period.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Do you offer yearly billing?</span>
+                        <div class="faq-toggle">+</div>
+                    </div>
+                    <div class="faq-answer">
+                        Yes! When you choose yearly billing, you get 2 months free on any plan. Switch to yearly billing in your account settings to save more.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What payment methods do you accept?</span>
+                        <div class="faq-toggle">+</div>
+                    </div>
+                    <div class="faq-answer">
+                        We accept all major credit cards (Visa, Mastercard, American Express), PayPal, and bank transfers. All transactions are secure and encrypted.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can I upgrade or downgrade anytime?</span>
+                        <div class="faq-toggle">+</div>
+                    </div>
+                    <div class="faq-answer">
+                        Absolutely! Upgrade or downgrade your plan at any time. Changes take effect immediately, and we'll prorate any charges accordingly.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Is there a free trial?</span>
+                        <div class="faq-toggle">+</div>
+                    </div>
+                    <div class="faq-answer">
+                        Yes! Professional and Premium plans come with a 7-day free trial. No credit card required to start. Cancel anytime during the trial period.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What's the difference between models?</span>
+                        <div class="faq-toggle">+</div>
+                    </div>
+                    <div class="faq-answer">
+                        Different models excel at different tasks. Chat models answer questions, coding models help with development, image models generate visuals, and video models create animations.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>💳 Money-back guarantee • 🔒 Secure & encrypted • 🚀 Instant activation</p>
+        <p style="font-size: 0.85rem; margin-top: 15px;">© 2024 Grok AI. All rights reserved.</p>
+    </div>
+
+    <script>
+        // FAQ Toggle
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.toggle('open');
+            });
+        });
+
+        // CTA Button Actions
+        document.querySelectorAll('.cta-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const tier = this.closest('.pricing-card').querySelector('.tier-name').textContent;
+                alert(`Proceeding with ${tier} plan...`);
+            });
+        });
+    </script>
+    </div>
+</body>
+</html>
